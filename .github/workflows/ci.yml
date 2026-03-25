@@ -1,0 +1,127 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+
+jobs:
+
+    cs-fixer:
+        name: PHP CS Fixer
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  coverage: none
+
+            - name: Cache PHP CS Fixer
+              uses: actions/cache@v4
+              with:
+                  path: tools/php-cs-fixer/vendor
+                  key: php-cs-fixer-${{ hashFiles('tools/php-cs-fixer/composer.lock') }}
+
+            - name: Install PHP CS Fixer
+              run: composer install --working-dir=tools/php-cs-fixer --no-interaction --prefer-dist
+
+            - name: Run PHP CS Fixer
+              run: tools/php-cs-fixer/vendor/bin/php-cs-fixer check --diff --no-interaction
+
+    phpstan:
+        name: PHPStan
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  coverage: none
+
+            - name: Cache Composer
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: composer-${{ hashFiles('composer.lock') }}
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist
+
+            - name: Warm up Symfony cache
+              run: php bin/console cache:warmup --env=dev
+              env:
+                  APP_ENV: dev
+                  APP_SECRET: ci_secret_not_used
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/benevoles
+
+            - name: Run PHPStan
+              run: vendor/bin/phpstan analyse --no-progress
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/benevoles
+
+    tests:
+        name: PHPUnit Tests
+        runs-on: ubuntu-latest
+
+        services:
+            database:
+                image: mariadb:11
+                env:
+                    MARIADB_ROOT_PASSWORD: root
+                    MARIADB_DATABASE: benevoles
+                    MARIADB_USER: benevoles
+                    MARIADB_PASSWORD: benevoles
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="healthcheck.sh --connect --innodb_initialized"
+                    --health-interval=5s
+                    --health-timeout=5s
+                    --health-retries=10
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  extensions: pdo_mysql, intl, zip
+                  coverage: none
+
+            - name: Cache Composer
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: composer-${{ hashFiles('composer.lock') }}
+
+            - name: Install dependencies
+              run: composer install --no-interaction --prefer-dist
+
+            - name: Créer la base de test via root
+              run: |
+                  mysql -h 127.0.0.1 -u root -proot \
+                    -e "CREATE DATABASE IF NOT EXISTS benevoles_test; GRANT ALL ON benevoles_test.* TO 'benevoles'@'%';"
+
+            - name: Lancer les migrations
+              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction --allow-no-migration
+              env:
+                  APP_ENV: test
+                  APP_SECRET: ci_secret_not_used
+                  DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
+
+            - name: Run tests
+              run: php bin/phpunit
+              env:
+                  APP_ENV: test
+                  APP_SECRET: ci_secret_not_used
+                  DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
