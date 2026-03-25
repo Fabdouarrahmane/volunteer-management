@@ -8,9 +8,6 @@ on:
 
 jobs:
 
-    # -------------------------------------------------------
-    # 1. PHP CS Fixer — vérification du style de code
-    # -------------------------------------------------------
     cs-fixer:
         name: PHP CS Fixer
         runs-on: ubuntu-latest
@@ -33,12 +30,9 @@ jobs:
             - name: Install PHP CS Fixer
               run: composer install --working-dir=tools/php-cs-fixer --no-interaction --prefer-dist
 
-            - name: Run PHP CS Fixer (check only, no fix)
+            - name: Run PHP CS Fixer
               run: tools/php-cs-fixer/vendor/bin/php-cs-fixer check --diff --no-interaction
 
-    # -------------------------------------------------------
-    # 2. PHPStan — analyse statique
-    # -------------------------------------------------------
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest
@@ -70,10 +64,9 @@ jobs:
 
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse --no-progress
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/benevoles
 
-    # -------------------------------------------------------
-    # 3. Tests PHPUnit
-    # -------------------------------------------------------
     tests:
         name: PHPUnit Tests
         runs-on: ubuntu-latest
@@ -114,18 +107,21 @@ jobs:
             - name: Install dependencies
               run: composer install --no-interaction --prefer-dist
 
-            - name: Grant permissions pour créer benevoles_test
+            - name: Créer la base de test via root
               run: |
-                  mysql -h 127.0.0.1 -u root -proot -e "GRANT ALL ON \`benevoles_test\`.* TO 'benevoles'@'%';"
+                  mysql -h 127.0.0.1 -u root -proot \
+                    -e "CREATE DATABASE IF NOT EXISTS benevoles_test; GRANT ALL ON benevoles_test.* TO 'benevoles'@'%';"
 
-            - name: Create test database & run migrations
-              run: |
-                  php bin/console doctrine:database:create --env=test --if-not-exists
-                  php bin/console doctrine:migrations:migrate --env=test --no-interaction
+            - name: Lancer les migrations
+              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
               env:
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles
+                  APP_ENV: test
+                  APP_SECRET: ci_secret_not_used
+                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test?serverVersion=mariadb-11.0.0&charset=utf8mb4
 
             - name: Run tests
               run: php bin/phpunit
               env:
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles
+                  APP_ENV: test
+                  APP_SECRET: ci_secret_not_used
+                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test?serverVersion=mariadb-11.0.0&charset=utf8mb4
