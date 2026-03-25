@@ -61,7 +61,7 @@ jobs:
             - name: Install dependencies
               run: composer install --no-interaction --prefer-dist
 
-            - name: Warm up Symfony cache (nécessaire pour l'extension Symfony)
+            - name: Warm up Symfony cache
               run: php bin/console cache:warmup --env=dev
               env:
                   APP_ENV: dev
@@ -83,7 +83,7 @@ jobs:
                 image: mariadb:11
                 env:
                     MARIADB_ROOT_PASSWORD: root
-                    MARIADB_DATABASE: benevoles_test
+                    MARIADB_DATABASE: benevoles
                     MARIADB_USER: benevoles
                     MARIADB_PASSWORD: benevoles
                 ports:
@@ -114,14 +114,18 @@ jobs:
             - name: Install dependencies
               run: composer install --no-interaction --prefer-dist
 
+            - name: Grant permissions pour créer benevoles_test
+              run: |
+                  mysql -h 127.0.0.1 -u root -proot -e "GRANT ALL ON \`benevoles_test\`.* TO 'benevoles'@'%';"
+
             - name: Create test database & run migrations
               run: |
                   php bin/console doctrine:database:create --env=test --if-not-exists
                   php bin/console doctrine:migrations:migrate --env=test --no-interaction
               env:
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test
+                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles
 
             - name: Run tests
               run: php bin/phpunit
               env:
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test
+                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles
