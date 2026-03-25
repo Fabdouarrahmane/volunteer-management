@@ -117,11 +117,11 @@ jobs:
               env:
                   APP_ENV: test
                   APP_SECRET: ci_secret_not_used
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test?serverVersion=mariadb-11.0.0&charset=utf8mb4
+                  DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
 
             - name: Run tests
               run: php bin/phpunit
               env:
                   APP_ENV: test
                   APP_SECRET: ci_secret_not_used
-                  DATABASE_URL: mysql://benevoles:benevoles@127.0.0.1:3306/benevoles_test?serverVersion=mariadb-11.0.0&charset=utf8mb4
+                  DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
