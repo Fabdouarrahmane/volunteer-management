@@ -113,7 +113,7 @@ jobs:
                     -e "CREATE DATABASE IF NOT EXISTS benevoles_test; GRANT ALL ON benevoles_test.* TO 'benevoles'@'%';"
 
             - name: Lancer les migrations
-              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
+              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction --allow-no-migration
               env:
                   APP_ENV: test
                   APP_SECRET: ci_secret_not_used
