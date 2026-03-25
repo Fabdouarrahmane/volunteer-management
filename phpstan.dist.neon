@@ -1,0 +1,15 @@
+parameters:
+    level: 6
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - var
+        - vendor
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    ignoreErrors:
+        # Faux positif Doctrine : l'ID est assigné par réflexion, pas dans le code
+        - '#Property .+\:\:\$id .+ is never assigned#'
+        # Faux positif Symfony bootstrap
+        - '#Call to function method_exists\(\) with .+Dotenv.+ will always evaluate to true#'
