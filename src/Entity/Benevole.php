@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: BenevoleRepository::class)]
-class Benevole
+class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,7 +24,7 @@ class Benevole
     #[ORM\Column(length: 100)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
@@ -34,27 +36,19 @@ class Benevole
     #[ORM\Column(length: 255)]
     private ?string $motDePasse = null;
 
-    /**
-     * @var Collection<int, Disponibilite>
-     */
+    /** @var Collection<int, Disponibilite> */
     #[ORM\OneToMany(targetEntity: Disponibilite::class, mappedBy: 'benevole', orphanRemoval: true)]
     private Collection $disponibilites;
 
-    /**
-     * @var Collection<int, Message>
-     */
+    /** @var Collection<int, Message> */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'expediteur')]
     private Collection $messagesEnvoyes;
 
-    /**
-     * @var Collection<int, Message>
-     */
+    /** @var Collection<int, Message> */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'destinataire')]
     private Collection $messagesRecus;
 
-    /**
-     * @var Collection<int, Affectation>
-     */
+    /** @var Collection<int, Affectation> */
     #[ORM\OneToMany(targetEntity: Affectation::class, mappedBy: 'benevole')]
     private Collection $affectations;
 
@@ -64,6 +58,25 @@ class Benevole
         $this->messagesEnvoyes = new ArrayCollection();
         $this->messagesRecus = new ArrayCollection();
         $this->affectations = new ArrayCollection();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_BENEVOLE'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getPassword(): string
+    {
+        return (string) $this->motDePasse;
     }
 
     public function getId(): ?int
@@ -143,9 +156,7 @@ class Benevole
         return $this;
     }
 
-    /**
-     * @return Collection<int, Disponibilite>
-     */
+    /** @return Collection<int, Disponibilite> */
     public function getDisponibilites(): Collection
     {
         return $this->disponibilites;
@@ -164,7 +175,6 @@ class Benevole
     public function removeDisponibilite(Disponibilite $disponibilite): static
     {
         if ($this->disponibilites->removeElement($disponibilite)) {
-            // set the owning side to null (unless already changed)
             if ($disponibilite->getBenevole() === $this) {
                 $disponibilite->setBenevole(null);
             }
@@ -173,9 +183,7 @@ class Benevole
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
+    /** @return Collection<int, Message> */
     public function getMessagesEnvoyes(): Collection
     {
         return $this->messagesEnvoyes;
@@ -194,7 +202,6 @@ class Benevole
     public function removeMessagesEnvoye(Message $messagesEnvoye): static
     {
         if ($this->messagesEnvoyes->removeElement($messagesEnvoye)) {
-            // set the owning side to null (unless already changed)
             if ($messagesEnvoye->getExpediteur() === $this) {
                 $messagesEnvoye->setExpediteur(null);
             }
@@ -203,9 +210,7 @@ class Benevole
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
+    /** @return Collection<int, Message> */
     public function getMessagesRecus(): Collection
     {
         return $this->messagesRecus;
@@ -224,7 +229,6 @@ class Benevole
     public function removeMessagesRecu(Message $messagesRecu): static
     {
         if ($this->messagesRecus->removeElement($messagesRecu)) {
-            // set the owning side to null (unless already changed)
             if ($messagesRecu->getDestinataire() === $this) {
                 $messagesRecu->setDestinataire(null);
             }
@@ -233,9 +237,7 @@ class Benevole
         return $this;
     }
 
-    /**
-     * @return Collection<int, Affectation>
-     */
+    /** @return Collection<int, Affectation> */
     public function getAffectations(): Collection
     {
         return $this->affectations;
@@ -254,7 +256,6 @@ class Benevole
     public function removeAffectation(Affectation $affectation): static
     {
         if ($this->affectations->removeElement($affectation)) {
-            // set the owning side to null (unless already changed)
             if ($affectation->getBenevole() === $this) {
                 $affectation->setBenevole(null);
             }

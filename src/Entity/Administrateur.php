@@ -6,9 +6,11 @@ use App\Repository\AdministrateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
-class Administrateur
+class Administrateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,21 +23,38 @@ class Administrateur
     #[ORM\Column(length: 100)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $motDePasse = null;
 
-    /**
-     * @var Collection<int, Evenement>
-     */
+    /** @var Collection<int, Evenement> */
     #[ORM\OneToMany(targetEntity: Evenement::class, mappedBy: 'administrateur')]
     private Collection $evenements;
 
     public function __construct()
     {
         $this->evenements = new ArrayCollection();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_ADMIN'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getPassword(): string
+    {
+        return (string) $this->motDePasse;
     }
 
     public function getId(): ?int
@@ -91,9 +110,7 @@ class Administrateur
         return $this;
     }
 
-    /**
-     * @return Collection<int, Evenement>
-     */
+    /** @return Collection<int, Evenement> */
     public function getEvenements(): Collection
     {
         return $this->evenements;
@@ -112,7 +129,6 @@ class Administrateur
     public function removeEvenement(Evenement $evenement): static
     {
         if ($this->evenements->removeElement($evenement)) {
-            // set the owning side to null (unless already changed)
             if ($evenement->getAdministrateur() === $this) {
                 $evenement->setAdministrateur(null);
             }
