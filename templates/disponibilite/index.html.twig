@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes disponibilités{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Mes disponibilités</h1>
+        <a href="{{ path('app_disponibilite_new') }}" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    {% if disponibilites is empty %}
+        <div class="alert alert-info">Aucune disponibilité enregistrée.</div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Heure début</th>
+                    <th>Heure fin</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for dispo in disponibilites %}
+                    <tr>
+                        <td>{{ dispo.dateDisponibilite|date('d/m/Y') }}</td>
+                        <td>{{ dispo.heureDebut|date('H:i') }}</td>
+                        <td>{{ dispo.heureFin|date('H:i') }}</td>
+                        <td>
+                        <span class="badge bg-{{ dispo.statutDisponibilite == 'disponible' ? 'success' : 'danger' }}">
+                            {{ dispo.statutDisponibilite }}
+                        </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_disponibilite_edit', {id: dispo.id}) }}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                            <form method="post" action="{{ path('app_disponibilite_delete', {id: dispo.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Supprimer cette disponibilité ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_disponibilite_' ~ dispo.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
