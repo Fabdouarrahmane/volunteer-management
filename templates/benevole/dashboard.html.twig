@@ -7,7 +7,16 @@
     <p class="text-muted">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</p>
 
     <div class="row mt-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">🗓️ Événements</h5>
+                    <p class="card-text text-muted">Consultez les événements à venir.</p>
+                    <a href="{{ path('app_benevole_evenement_index') }}" class="btn btn-outline-primary btn-sm">Voir</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">📅 Mes disponibilités</h5>
@@ -16,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">✅ Mes affectations</h5>
@@ -25,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">✉️ Messagerie</h5>

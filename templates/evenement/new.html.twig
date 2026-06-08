@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel événement{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Nouvel événement</h1>
+        <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary">← Retour</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('evenement/_form.html.twig', { button_label: 'Créer l\'événement' }) }}
+        </div>
+    </div>
+{% endblock %}

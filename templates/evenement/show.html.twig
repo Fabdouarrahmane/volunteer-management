@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ evenement.titre }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ evenement.titre }}</h1>
+        <div>
+            <a href="{{ path('app_evenement_edit', {id: evenement.id}) }}" class="btn btn-warning">Modifier</a>
+            <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary ms-2">← Retour</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">{{ evenement.description ?? '—' }}</dd>
+
+                <dt class="col-sm-3">Date</dt>
+                <dd class="col-sm-9">{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</dd>
+
+                <dt class="col-sm-3">Lieu</dt>
+                <dd class="col-sm-9">{{ evenement.lieu ?? '—' }}</dd>
+
+                <dt class="col-sm-3">Bénévoles requis</dt>
+                <dd class="col-sm-9">{{ evenement.nbBenevoles }}</dd>
+
+                <dt class="col-sm-3">Statut</dt>
+                <dd class="col-sm-9">{{ evenement.statutEvenement }}</dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}
