@@ -48,29 +48,73 @@ class Administrateur implements UserInterface, PasswordAuthenticatedUserInterfac
         return ['ROLE_ADMIN'];
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getPassword(): string
     {
         return (string) $this->motDePasse;
     }
 
-    public function getId(): ?int { return $this->id; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getNom(): ?string { return $this->nom; }
-    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
 
-    public function getPrenom(): ?string { return $this->prenom; }
-    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
 
-    public function getEmail(): ?string { return $this->email; }
-    public function setEmail(string $email): static { $this->email = $email; return $this; }
+        return $this;
+    }
 
-    public function getMotDePasse(): ?string { return $this->motDePasse; }
-    public function setMotDePasse(string $motDePasse): static { $this->motDePasse = $motDePasse; return $this; }
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getMotDePasse(): ?string
+    {
+        return $this->motDePasse;
+    }
+
+    public function setMotDePasse(string $motDePasse): static
+    {
+        $this->motDePasse = $motDePasse;
+
+        return $this;
+    }
 
     /** @return Collection<int, Evenement> */
-    public function getEvenements(): Collection { return $this->evenements; }
+    public function getEvenements(): Collection
+    {
+        return $this->evenements;
+    }
 
     public function addEvenement(Evenement $evenement): static
     {
@@ -78,6 +122,7 @@ class Administrateur implements UserInterface, PasswordAuthenticatedUserInterfac
             $this->evenements->add($evenement);
             $evenement->setAdministrateur($this);
         }
+
         return $this;
     }
 
@@ -88,6 +133,7 @@ class Administrateur implements UserInterface, PasswordAuthenticatedUserInterfac
                 $evenement->setAdministrateur(null);
             }
         }
+
         return $this;
     }
 }

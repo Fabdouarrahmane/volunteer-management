@@ -70,35 +70,97 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
         return ['ROLE_BENEVOLE'];
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getPassword(): string
     {
         return (string) $this->motDePasse;
     }
 
-    public function getId(): ?int { return $this->id; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getNom(): ?string { return $this->nom; }
-    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
 
-    public function getPrenom(): ?string { return $this->prenom; }
-    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
 
-    public function getEmail(): ?string { return $this->email; }
-    public function setEmail(string $email): static { $this->email = $email; return $this; }
+        return $this;
+    }
 
-    public function getTelephone(): ?string { return $this->telephone; }
-    public function setTelephone(string $telephone): static { $this->telephone = $telephone; return $this; }
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
 
-    public function getCompetences(): ?string { return $this->competences; }
-    public function setCompetences(?string $competences): static { $this->competences = $competences; return $this; }
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
 
-    public function getMotDePasse(): ?string { return $this->motDePasse; }
-    public function setMotDePasse(string $motDePasse): static { $this->motDePasse = $motDePasse; return $this; }
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(string $telephone): static
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getCompetences(): ?string
+    {
+        return $this->competences;
+    }
+
+    public function setCompetences(?string $competences): static
+    {
+        $this->competences = $competences;
+
+        return $this;
+    }
+
+    public function getMotDePasse(): ?string
+    {
+        return $this->motDePasse;
+    }
+
+    public function setMotDePasse(string $motDePasse): static
+    {
+        $this->motDePasse = $motDePasse;
+
+        return $this;
+    }
 
     /** @return Collection<int, Disponibilite> */
-    public function getDisponibilites(): Collection { return $this->disponibilites; }
+    public function getDisponibilites(): Collection
+    {
+        return $this->disponibilites;
+    }
 
     public function addDisponibilite(Disponibilite $disponibilite): static
     {
@@ -106,6 +168,7 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
             $this->disponibilites->add($disponibilite);
             $disponibilite->setBenevole($this);
         }
+
         return $this;
     }
 
@@ -116,11 +179,15 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
                 $disponibilite->setBenevole(null);
             }
         }
+
         return $this;
     }
 
     /** @return Collection<int, Message> */
-    public function getMessagesEnvoyes(): Collection { return $this->messagesEnvoyes; }
+    public function getMessagesEnvoyes(): Collection
+    {
+        return $this->messagesEnvoyes;
+    }
 
     public function addMessagesEnvoye(Message $messagesEnvoye): static
     {
@@ -128,6 +195,7 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
             $this->messagesEnvoyes->add($messagesEnvoye);
             $messagesEnvoye->setExpediteur($this);
         }
+
         return $this;
     }
 
@@ -138,11 +206,15 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
                 $messagesEnvoye->setExpediteur(null);
             }
         }
+
         return $this;
     }
 
     /** @return Collection<int, Message> */
-    public function getMessagesRecus(): Collection { return $this->messagesRecus; }
+    public function getMessagesRecus(): Collection
+    {
+        return $this->messagesRecus;
+    }
 
     public function addMessagesRecu(Message $messagesRecu): static
     {
@@ -150,6 +222,7 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
             $this->messagesRecus->add($messagesRecu);
             $messagesRecu->setDestinataire($this);
         }
+
         return $this;
     }
 
@@ -160,11 +233,15 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
                 $messagesRecu->setDestinataire(null);
             }
         }
+
         return $this;
     }
 
     /** @return Collection<int, Affectation> */
-    public function getAffectations(): Collection { return $this->affectations; }
+    public function getAffectations(): Collection
+    {
+        return $this->affectations;
+    }
 
     public function addAffectation(Affectation $affectation): static
     {
@@ -172,6 +249,7 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
             $this->affectations->add($affectation);
             $affectation->setBenevole($this);
         }
+
         return $this;
     }
 
@@ -182,6 +260,7 @@ class Benevole implements UserInterface, PasswordAuthenticatedUserInterface
                 $affectation->setBenevole(null);
             }
         }
+
         return $this;
     }
 }
