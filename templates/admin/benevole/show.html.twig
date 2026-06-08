@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ benevole.prenom }} {{ benevole.nom }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ benevole.prenom }} {{ benevole.nom }}</h1>
+        <div>
+            <a href="{{ path('app_admin_benevole_edit', {id: benevole.id}) }}" class="btn btn-warning">Modifier</a>
+            <a href="{{ path('app_admin_benevole_index') }}" class="btn btn-outline-secondary ms-2">← Retour</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nom</dt>
+                <dd class="col-sm-9">{{ benevole.nom }}</dd>
+
+                <dt class="col-sm-3">Prénom</dt>
+                <dd class="col-sm-9">{{ benevole.prenom }}</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">{{ benevole.email }}</dd>
+
+                <dt class="col-sm-3">Téléphone</dt>
+                <dd class="col-sm-9">{{ benevole.telephone }}</dd>
+
+                <dt class="col-sm-3">Compétences</dt>
+                <dd class="col-sm-9">{{ benevole.competences ?? '—' }}</dd>
+
+                <dt class="col-sm-3">Disponibilités</dt>
+                <dd class="col-sm-9">{{ benevole.disponibilites|length }}</dd>
+
+                <dt class="col-sm-3">Affectations</dt>
+                <dd class="col-sm-9">{{ benevole.affectations|length }}</dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}
