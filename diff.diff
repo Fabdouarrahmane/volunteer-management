@@ -1,0 +1,385 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 0cd0453..5845da7 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -119,9 +119,9 @@ jobs:
+                   APP_SECRET: ci_secret_not_used
+                   DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
+ 
+-            - name: Run tests
+-              run: php bin/phpunit
+-              env:
+-                  APP_ENV: test
+-                  APP_SECRET: ci_secret_not_used
+-                  DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
++            -   name: Run tests
++                run: php bin/phpunit --testsuite Unit,Integration,Functional
++                env:
++                    APP_ENV: test
++                    APP_SECRET: ci_secret_not_used
++                    DATABASE_URL: "mysql://benevoles:benevoles@127.0.0.1:3306/benevoles?serverVersion=mariadb-11.0.0&charset=utf8mb4"
+diff --git a/Makefile b/Makefile
+index 9c6b466..fafaf3d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,4 +1,4 @@
+-.PHONY: help build up down restart shell sf cc logs db
++.PHONY: help build up down restart php sf cc logs db
+ 
+ # Couleurs
+ GREEN  := \033[0;32m
+@@ -20,7 +20,7 @@ down: ## Arrête les conteneurs
+ restart: ## Redémarre les conteneurs
+ 	docker compose restart
+ 
+-shell: ## Ouvre un shell dans le conteneur PHP
++php: ## Ouvre un shell dans le conteneur PHP
+ 	docker compose exec php bash
+ 
+ sf: ## Exécute une commande Symfony  → make sf c="cache:clear"
+diff --git a/phpunit.dist.xml b/phpunit.dist.xml
+index 22bd879..0778887 100644
+--- a/phpunit.dist.xml
++++ b/phpunit.dist.xml
+@@ -18,8 +18,14 @@
+     </php>
+ 
+     <testsuites>
+-        <testsuite name="Project Test Suite">
+-            <directory>tests</directory>
++        <testsuite name="Unit">
++            <directory>tests/Unit</directory>
++        </testsuite>
++        <testsuite name="Integration">
++            <directory>tests/Integration</directory>
++        </testsuite>
++        <testsuite name="Functional">
++            <directory>tests/Functional</directory>
+         </testsuite>
+     </testsuites>
+ 
+diff --git a/src/Entity/Administrateur.php b/src/Entity/Administrateur.php
+index 52e98ac..a179355 100644
+--- a/src/Entity/Administrateur.php
++++ b/src/Entity/Administrateur.php
+@@ -3,6 +3,8 @@
+ namespace App\Entity;
+ 
+ use App\Repository\AdministrateurRepository;
++use Doctrine\Common\Collections\ArrayCollection;
++use Doctrine\Common\Collections\Collection;
+ use Doctrine\ORM\Mapping as ORM;
+ 
+ #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
+@@ -25,6 +27,17 @@ class Administrateur
+     #[ORM\Column(length: 255)]
+     private ?string $motDePasse = null;
+ 
++    /**
++     * @var Collection<int, Evenement>
++     */
++    #[ORM\OneToMany(targetEntity: Evenement::class, mappedBy: 'administrateur')]
++    private Collection $evenements;
++
++    public function __construct()
++    {
++        $this->evenements = new ArrayCollection();
++    }
++
+     public function getId(): ?int
+     {
+         return $this->id;
+@@ -77,4 +90,34 @@ class Administrateur
+ 
+         return $this;
+     }
++
++    /**
++     * @return Collection<int, Evenement>
++     */
++    public function getEvenements(): Collection
++    {
++        return $this->evenements;
++    }
++
++    public function addEvenement(Evenement $evenement): static
++    {
++        if (!$this->evenements->contains($evenement)) {
++            $this->evenements->add($evenement);
++            $evenement->setAdministrateur($this);
++        }
++
++        return $this;
++    }
++
++    public function removeEvenement(Evenement $evenement): static
++    {
++        if ($this->evenements->removeElement($evenement)) {
++            // set the owning side to null (unless already changed)
++            if ($evenement->getAdministrateur() === $this) {
++                $evenement->setAdministrateur(null);
++            }
++        }
++
++        return $this;
++    }
+ }
+diff --git a/src/Entity/Benevole.php b/src/Entity/Benevole.php
+index 6e54866..bebb7dc 100644
+--- a/src/Entity/Benevole.php
++++ b/src/Entity/Benevole.php
+@@ -3,6 +3,8 @@
+ namespace App\Entity;
+ 
+ use App\Repository\BenevoleRepository;
++use Doctrine\Common\Collections\ArrayCollection;
++use Doctrine\Common\Collections\Collection;
+ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
+ 
+@@ -32,6 +34,38 @@ class Benevole
+     #[ORM\Column(length: 255)]
+     private ?string $motDePasse = null;
+ 
++    /**
++     * @var Collection<int, Disponibilite>
++     */
++    #[ORM\OneToMany(targetEntity: Disponibilite::class, mappedBy: 'benevole', orphanRemoval: true)]
++    private Collection $disponibilites;
++
++    /**
++     * @var Collection<int, Message>
++     */
++    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'expediteur')]
++    private Collection $messagesEnvoyes;
++
++    /**
++     * @var Collection<int, Message>
++     */
++    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'destinataire')]
++    private Collection $messagesRecus;
++
++    /**
++     * @var Collection<int, Affectation>
++     */
++    #[ORM\OneToMany(targetEntity: Affectation::class, mappedBy: 'benevole')]
++    private Collection $affectations;
++
++    public function __construct()
++    {
++        $this->disponibilites = new ArrayCollection();
++        $this->messagesEnvoyes = new ArrayCollection();
++        $this->messagesRecus = new ArrayCollection();
++        $this->affectations = new ArrayCollection();
++    }
++
+     public function getId(): ?int
+     {
+         return $this->id;
+@@ -108,4 +142,124 @@ class Benevole
+ 
+         return $this;
+     }
++
++    /**
++     * @return Collection<int, Disponibilite>
++     */
++    public function getDisponibilites(): Collection
++    {
++        return $this->disponibilites;
++    }
++
++    public function addDisponibilite(Disponibilite $disponibilite): static
++    {
++        if (!$this->disponibilites->contains($disponibilite)) {
++            $this->disponibilites->add($disponibilite);
++            $disponibilite->setBenevole($this);
++        }
++
++        return $this;
++    }
++
++    public function removeDisponibilite(Disponibilite $disponibilite): static
++    {
++        if ($this->disponibilites->removeElement($disponibilite)) {
++            // set the owning side to null (unless already changed)
++            if ($disponibilite->getBenevole() === $this) {
++                $disponibilite->setBenevole(null);
++            }
++        }
++
++        return $this;
++    }
++
++    /**
++     * @return Collection<int, Message>
++     */
++    public function getMessagesEnvoyes(): Collection
++    {
++        return $this->messagesEnvoyes;
++    }
++
++    public function addMessagesEnvoye(Message $messagesEnvoye): static
++    {
++        if (!$this->messagesEnvoyes->contains($messagesEnvoye)) {
++            $this->messagesEnvoyes->add($messagesEnvoye);
++            $messagesEnvoye->setExpediteur($this);
++        }
++
++        return $this;
++    }
++
++    public function removeMessagesEnvoye(Message $messagesEnvoye): static
++    {
++        if ($this->messagesEnvoyes->removeElement($messagesEnvoye)) {
++            // set the owning side to null (unless already changed)
++            if ($messagesEnvoye->getExpediteur() === $this) {
++                $messagesEnvoye->setExpediteur(null);
++            }
++        }
++
++        return $this;
++    }
++
++    /**
++     * @return Collection<int, Message>
++     */
++    public function getMessagesRecus(): Collection
++    {
++        return $this->messagesRecus;
++    }
++
++    public function addMessagesRecu(Message $messagesRecu): static
++    {
++        if (!$this->messagesRecus->contains($messagesRecu)) {
++            $this->messagesRecus->add($messagesRecu);
++            $messagesRecu->setDestinataire($this);
++        }
++
++        return $this;
++    }
++
++    public function removeMessagesRecu(Message $messagesRecu): static
++    {
++        if ($this->messagesRecus->removeElement($messagesRecu)) {
++            // set the owning side to null (unless already changed)
++            if ($messagesRecu->getDestinataire() === $this) {
++                $messagesRecu->setDestinataire(null);
++            }
++        }
++
++        return $this;
++    }
++
++    /**
++     * @return Collection<int, Affectation>
++     */
++    public function getAffectations(): Collection
++    {
++        return $this->affectations;
++    }
++
++    public function addAffectation(Affectation $affectation): static
++    {
++        if (!$this->affectations->contains($affectation)) {
++            $this->affectations->add($affectation);
++            $affectation->setBenevole($this);
++        }
++
++        return $this;
++    }
++
++    public function removeAffectation(Affectation $affectation): static
++    {
++        if ($this->affectations->removeElement($affectation)) {
++            // set the owning side to null (unless already changed)
++            if ($affectation->getBenevole() === $this) {
++                $affectation->setBenevole(null);
++            }
++        }
++
++        return $this;
++    }
+ }
+diff --git a/src/Entity/Evenement.php b/src/Entity/Evenement.php
+index c9a423f..d1ccadb 100644
+--- a/src/Entity/Evenement.php
++++ b/src/Entity/Evenement.php
+@@ -3,6 +3,8 @@
+ namespace App\Entity;
+ 
+ use App\Repository\EvenementRepository;
++use Doctrine\Common\Collections\ArrayCollection;
++use Doctrine\Common\Collections\Collection;
+ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
+ 
+@@ -32,6 +34,21 @@ class Evenement
+     #[ORM\Column(length: 50)]
+     private ?string $statutEvenement = null;
+ 
++    /**
++     * @var Collection<int, Affectation>
++     */
++    #[ORM\OneToMany(targetEntity: Affectation::class, mappedBy: 'evenement')]
++    private Collection $affectations;
++
++    #[ORM\ManyToOne(inversedBy: 'evenements')]
++    #[ORM\JoinColumn(nullable: false)]
++    private ?Administrateur $administrateur = null;
++
++    public function __construct()
++    {
++        $this->affectations = new ArrayCollection();
++    }
++
+     public function getId(): ?int
+     {
+         return $this->id;
+@@ -108,4 +125,46 @@ class Evenement
+ 
+         return $this;
+     }
++
++    /**
++     * @return Collection<int, Affectation>
++     */
++    public function getAffectations(): Collection
++    {
++        return $this->affectations;
++    }
++
++    public function addAffectation(Affectation $affectation): static
++    {
++        if (!$this->affectations->contains($affectation)) {
++            $this->affectations->add($affectation);
++            $affectation->setEvenement($this);
++        }
++
++        return $this;
++    }
++
++    public function removeAffectation(Affectation $affectation): static
++    {
++        if ($this->affectations->removeElement($affectation)) {
++            // set the owning side to null (unless already changed)
++            if ($affectation->getEvenement() === $this) {
++                $affectation->setEvenement(null);
++            }
++        }
++
++        return $this;
++    }
++
++    public function getAdministrateur(): ?Administrateur
++    {
++        return $this->administrateur;
++    }
++
++    public function setAdministrateur(?Administrateur $administrateur): static
++    {
++        $this->administrateur = $administrateur;
++
++        return $this;
++    }
+ }
