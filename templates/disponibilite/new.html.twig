@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle disponibilité{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Nouvelle disponibilité</h1>
+        <a href="{{ path('app_disponibilite_index') }}" class="btn btn-outline-secondary">← Retour</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('disponibilite/_form.html.twig', { button_label: 'Ajouter' }) }}
+        </div>
+    </div>
+{% endblock %}

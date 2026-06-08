@@ -1,0 +1,26 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-4 mb-3">
+        {{ form_label(form.dateDisponibilite) }}
+        {{ form_widget(form.dateDisponibilite) }}
+        {{ form_errors(form.dateDisponibilite) }}
+    </div>
+    <div class="col-md-3 mb-3">
+        {{ form_label(form.heureDebut) }}
+        {{ form_widget(form.heureDebut) }}
+        {{ form_errors(form.heureDebut) }}
+    </div>
+    <div class="col-md-3 mb-3">
+        {{ form_label(form.heureFin) }}
+        {{ form_widget(form.heureFin) }}
+        {{ form_errors(form.heureFin) }}
+    </div>
+    <div class="col-md-2 mb-3">
+        {{ form_label(form.statutDisponibilite) }}
+        {{ form_widget(form.statutDisponibilite) }}
+        {{ form_errors(form.statutDisponibilite) }}
+    </div>
+</div>
+<button type="submit" class="btn btn-primary">{{ button_label ?? 'Enregistrer' }}</button>
+<a href="{{ path('app_disponibilite_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+{{ form_end(form) }}
