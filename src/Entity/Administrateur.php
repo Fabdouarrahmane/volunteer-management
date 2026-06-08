@@ -6,9 +6,11 @@ use App\Repository\AdministrateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AdministrateurRepository::class)]
-class Administrateur
+class Administrateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,15 +23,13 @@ class Administrateur
     #[ORM\Column(length: 100)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $motDePasse = null;
 
-    /**
-     * @var Collection<int, Evenement>
-     */
+    /** @var Collection<int, Evenement> */
     #[ORM\OneToMany(targetEntity: Evenement::class, mappedBy: 'administrateur')]
     private Collection $evenements;
 
@@ -38,66 +38,39 @@ class Administrateur
         $this->evenements = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getUserIdentifier(): string
     {
-        return $this->id;
+        return (string) $this->email;
     }
 
-    public function getNom(): ?string
+    public function getRoles(): array
     {
-        return $this->nom;
+        return ['ROLE_ADMIN'];
     }
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
+    public function eraseCredentials(): void {}
 
-        return $this;
+    public function getPassword(): string
+    {
+        return (string) $this->motDePasse;
     }
 
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
+    public function getNom(): ?string { return $this->nom; }
+    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
 
-        return $this;
-    }
+    public function getPrenom(): ?string { return $this->prenom; }
+    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
+    public function getEmail(): ?string { return $this->email; }
+    public function setEmail(string $email): static { $this->email = $email; return $this; }
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+    public function getMotDePasse(): ?string { return $this->motDePasse; }
+    public function setMotDePasse(string $motDePasse): static { $this->motDePasse = $motDePasse; return $this; }
 
-        return $this;
-    }
-
-    public function getMotDePasse(): ?string
-    {
-        return $this->motDePasse;
-    }
-
-    public function setMotDePasse(string $motDePasse): static
-    {
-        $this->motDePasse = $motDePasse;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Evenement>
-     */
-    public function getEvenements(): Collection
-    {
-        return $this->evenements;
-    }
+    /** @return Collection<int, Evenement> */
+    public function getEvenements(): Collection { return $this->evenements; }
 
     public function addEvenement(Evenement $evenement): static
     {
@@ -105,19 +78,16 @@ class Administrateur
             $this->evenements->add($evenement);
             $evenement->setAdministrateur($this);
         }
-
         return $this;
     }
 
     public function removeEvenement(Evenement $evenement): static
     {
         if ($this->evenements->removeElement($evenement)) {
-            // set the owning side to null (unless already changed)
             if ($evenement->getAdministrateur() === $this) {
                 $evenement->setAdministrateur(null);
             }
         }
-
         return $this;
     }
 }

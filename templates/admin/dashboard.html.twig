@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord — Administrateur{% endblock %}
+
+{% block body %}
+    <h1>Tableau de bord</h1>
+    <p class="text-muted">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</p>
+
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Bénévoles</h5>
+                    <p class="card-text display-6">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Événements</h5>
+                    <p class="card-text display-6">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Affectations</h5>
+                    <p class="card-text display-6">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Messages</h5>
+                    <p class="card-text display-6">—</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
