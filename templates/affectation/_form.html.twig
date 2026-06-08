@@ -1,0 +1,26 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.benevole) }}
+    {{ form_widget(form.benevole) }}
+    {{ form_errors(form.benevole) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.evenement) }}
+    {{ form_widget(form.evenement) }}
+    {{ form_errors(form.evenement) }}
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.roleMission) }}
+        {{ form_widget(form.roleMission) }}
+        {{ form_errors(form.roleMission) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.statutAffectation) }}
+        {{ form_widget(form.statutAffectation) }}
+        {{ form_errors(form.statutAffectation) }}
+    </div>
+</div>
+<button type="submit" class="btn btn-primary">{{ button_label ?? 'Enregistrer' }}</button>
+<a href="{{ path('app_affectation_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+{{ form_end(form) }}

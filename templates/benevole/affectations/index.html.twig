@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes affectations{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Mes affectations</h1>
+        <a href="{{ path('app_benevole_dashboard') }}" class="btn btn-outline-secondary">← Retour</a>
+    </div>
+
+    {% if affectations is empty %}
+        <div class="alert alert-info">Vous n'avez pas encore d'affectation.</div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>Événement</th>
+                    <th>Date</th>
+                    <th>Lieu</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for affectation in affectations %}
+                    {% set statut_colors = {
+                        'confirmee': 'success',
+                        'en_attente': 'warning',
+                        'annulee': 'danger'
+                    } %}
+                    <tr>
+                        <td>{{ affectation.evenement.titre }}</td>
+                        <td>{{ affectation.evenement.dateEvenement|date('d/m/Y à H:i') }}</td>
+                        <td>{{ affectation.evenement.lieu ?? '—' }}</td>
+                        <td>{{ affectation.roleMission }}</td>
+                        <td>
+                        <span class="badge bg-{{ statut_colors[affectation.statutAffectation] ?? 'secondary' }}">
+                            {{ affectation.statutAffectation }}
+                        </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

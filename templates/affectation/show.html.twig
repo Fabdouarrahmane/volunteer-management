@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectation — {{ affectation.benevole.prenom }} {{ affectation.benevole.nom }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Détail de l'affectation</h1>
+        <div>
+            <a href="{{ path('app_affectation_edit', {id: affectation.id}) }}" class="btn btn-warning">Modifier</a>
+            <a href="{{ path('app_affectation_index') }}" class="btn btn-outline-secondary ms-2">← Retour</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Bénévole</dt>
+                <dd class="col-sm-9">{{ affectation.benevole.prenom }} {{ affectation.benevole.nom }}</dd>
+
+                <dt class="col-sm-3">Événement</dt>
+                <dd class="col-sm-9">{{ affectation.evenement.titre }}</dd>
+
+                <dt class="col-sm-3">Date événement</dt>
+                <dd class="col-sm-9">{{ affectation.evenement.dateEvenement|date('d/m/Y à H:i') }}</dd>
+
+                <dt class="col-sm-3">Rôle / Mission</dt>
+                <dd class="col-sm-9">{{ affectation.roleMission }}</dd>
+
+                <dt class="col-sm-3">Date affectation</dt>
+                <dd class="col-sm-9">{{ affectation.dateAffectation|date('d/m/Y') }}</dd>
+
+                <dt class="col-sm-3">Statut</dt>
+                <dd class="col-sm-9">{{ affectation.statutAffectation }}</dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}
