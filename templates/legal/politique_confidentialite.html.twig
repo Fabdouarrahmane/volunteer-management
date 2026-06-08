@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}">Accueil</a>
+                    </li>
+                    <li class="breadcrumb-item active">Politique de confidentialité</li>
+                </ol>
+            </nav>
+
+            <h1 class="h2 mb-4">Politique de confidentialité</h1>
+
+            <div class="alert alert-info d-flex gap-2 align-items-start mb-4">
+                <i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i>
+                <div>
+                    Cette application est un projet pédagogique développé à <strong>ENSITECH</strong>
+                    dans le cadre d'un Master 2. Les données collectées sont utilisées uniquement
+                    à des fins de démonstration.
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-database me-2 text-primary"></i>Données collectées</h2>
+                    <p class="mb-2">Dans le cadre de son fonctionnement, l'application collecte les données suivantes :</p>
+                    <ul class="mb-0">
+                        <li><strong>Identité</strong> : nom et prénom</li>
+                        <li><strong>Contact</strong> : adresse email, numéro de téléphone (bénévoles uniquement)</li>
+                        <li><strong>Activité</strong> : disponibilités saisies, affectations aux événements, messages échangés</li>
+                        <li><strong>Connexion</strong> : mot de passe (stocké sous forme hachée, non lisible)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-bullseye me-2 text-primary"></i>Finalités du traitement</h2>
+                    <p class="mb-2">Les données collectées sont utilisées pour :</p>
+                    <ul class="mb-0">
+                        <li>Authentifier les utilisateurs et gérer les accès</li>
+                        <li>Planifier et gérer les événements associatifs</li>
+                        <li>Affecter les bénévoles aux missions selon leurs disponibilités</li>
+                        <li>Permettre la communication interne entre membres</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-lock me-2 text-primary"></i>Base légale</h2>
+                    <p class="mb-0">
+                        Le traitement des données repose sur le consentement de l'utilisateur au moment de
+                        la création de son compte, ainsi que sur l'intérêt légitime de l'organisation dans
+                        le cadre de la coordination de ses bénévoles.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-clock-history me-2 text-primary"></i>Durée de conservation</h2>
+                    <p class="mb-0">
+                        Les données sont conservées pendant la durée d'utilisation de l'application dans
+                        le cadre du projet pédagogique. À l'issue du projet, les données de démonstration
+                        sont supprimées.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-person-check me-2 text-primary"></i>Vos droits (RGPD)</h2>
+                    <p class="mb-2">Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+                    <ul class="mb-0">
+                        <li><strong>Droit d'accès</strong> : consulter vos données via votre <a href="{{ path('app_profil') }}">profil</a></li>
+                        <li><strong>Droit de rectification</strong> : modifier vos informations depuis votre <a href="{{ path('app_profil') }}">profil</a></li>
+                        <li><strong>Droit à l'effacement</strong> : demander la suppression de votre compte auprès d'un administrateur</li>
+                        <li><strong>Droit à la portabilité</strong> : demander une copie de vos données</li>
+                        <li><strong>Droit d'opposition</strong> : vous opposer à un traitement de vos données</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-shield-check me-2 text-primary"></i>Sécurité des données</h2>
+                    <p class="mb-0">
+                        Les mots de passe sont stockés sous forme hachée (bcrypt). Les accès sont contrôlés
+                        par rôle (administrateur / bénévole). L'application tourne dans un environnement
+                        isolé et n'est pas exposée publiquement sur Internet.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3"><i class="bi bi-share me-2 text-primary"></i>Partage des données</h2>
+                    <p class="mb-0">
+                        Aucune donnée personnelle n'est transmise à des tiers, vendue ou utilisée à des fins
+                        commerciales. Les données restent dans la base de données locale de l'application.
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-muted small text-end">Dernière mise à jour : juin 2026</p>
+
+            <div class="mt-3">
+                <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Retour
+                </a>
+                <a href="{{ path('app_mentions_legales') }}" class="btn btn-outline-secondary ms-2">
+                    Mentions légales
+                </a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

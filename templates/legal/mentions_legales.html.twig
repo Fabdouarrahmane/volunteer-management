@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_dashboard') }}">Accueil</a>
+                    </li>
+                    <li class="breadcrumb-item active">Mentions légales</li>
+                </ol>
+            </nav>
+
+            <h1 class="h2 mb-4">Mentions légales</h1>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-3"><i class="bi bi-building me-2 text-primary"></i>Éditeur de l'application</h2>
+                    <p class="mb-1">
+                        Cette application a été développée dans le cadre d'un projet de fin d'études
+                        <strong>Master 2</strong> à l'école <strong>ENSITECH</strong>.
+                    </p>
+                    <p class="text-muted small mb-0">Année universitaire 2025–2026</p>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-3"><i class="bi bi-globe me-2 text-primary"></i>Hébergement</h2>
+                    <p class="mb-0">
+                        L'application est hébergée localement dans un environnement Docker (Caddy, PHP 8.3, MariaDB 11)
+                        dans le cadre d'un usage pédagogique. Elle n'est pas accessible sur Internet.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-3"><i class="bi bi-shield-lock me-2 text-primary"></i>Propriété intellectuelle</h2>
+                    <p class="mb-0">
+                        L'ensemble du code source, des interfaces et des contenus de cette application sont
+                        produits à des fins strictement pédagogiques. Toute reproduction ou diffusion sans
+                        autorisation est interdite.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-3"><i class="bi bi-person-lock me-2 text-primary"></i>Données personnelles</h2>
+                    <p class="mb-0">
+                        Les données saisies dans cette application (nom, prénom, adresse email, numéro de téléphone)
+                        sont utilisées exclusivement dans le cadre du projet pédagogique et ne sont ni transmises
+                        ni cédées à des tiers. Conformément au RGPD, vous disposez d'un droit d'accès, de
+                        rectification et de suppression de vos données.
+                        Consultez notre <a href="{{ path('app_politique_confidentialite') }}">politique de confidentialité</a>
+                        pour en savoir plus.
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-3"><i class="bi bi-exclamation-triangle me-2 text-primary"></i>Limitation de responsabilité</h2>
+                    <p class="mb-0">
+                        Cette application est un prototype pédagogique. L'éditeur ne saurait être tenu responsable
+                        de tout dommage lié à son utilisation dans un contexte autre que celui pour lequel elle
+                        a été conçue.
+                    </p>
+
+                </div>
+            </div>
+
+            <p class="text-muted small text-end">Dernière mise à jour : juin 2026</p>
+
+            <div class="mt-3">
+                <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Retour
+                </a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

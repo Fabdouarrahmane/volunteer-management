@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+
+            <div class="d-flex align-items-center mb-4 gap-3">
+                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:56px;height:56px;font-size:1.5rem;">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <div>
+                    <h1 class="h3 mb-0">Mon profil</h1>
+                    <span class="text-muted small">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <span class="badge bg-danger">Administrateur</span>
+                    {% else %}
+                        <span class="badge bg-success">Bénévole</span>
+                    {% endif %}
+                        {{ user.email }}
+                </span>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Modifier mes informations</h5>
+                </div>
+                <div class="card-body p-4">
+                    {{ form_start(form) }}
+
+                    {# Infos personnelles #}
+                    <h6 class="text-muted text-uppercase fw-semibold mb-3" style="font-size:.75rem;letter-spacing:.08em;">
+                        Informations personnelles
+                    </h6>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-medium">{{ form_label(form.nom) }}</label>
+                            {{ form_widget(form.nom) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-medium">{{ form_label(form.prenom) }}</label>
+                            {{ form_widget(form.prenom) }}
+                            {{ form_errors(form.prenom) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{{ form_label(form.email) }}</label>
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    {% if form.telephone is defined %}
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">{{ form_label(form.telephone) }}</label>
+                            {{ form_widget(form.telephone) }}
+                            {{ form_errors(form.telephone) }}
+                        </div>
+                    {% endif %}
+
+                    {% if form.competences is defined %}
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">{{ form_label(form.competences) }}</label>
+                            {{ form_widget(form.competences) }}
+                            {{ form_errors(form.competences) }}
+                            {% if form.competences.vars.help is defined and form.competences.vars.help %}
+                                <div class="form-text">{{ form.competences.vars.help }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <hr class="my-4">
+
+                    {# Changement de mot de passe #}
+                    <h6 class="text-muted text-uppercase fw-semibold mb-3" style="font-size:.75rem;letter-spacing:.08em;">
+                        Changer le mot de passe
+                        <span class="fw-normal text-muted ms-1">(laisser vide pour conserver l'actuel)</span>
+                    </h6>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-medium">{{ form_label(form.plainPassword.first) }}</label>
+                            {{ form_widget(form.plainPassword.first) }}
+                            {{ form_errors(form.plainPassword.first) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-medium">{{ form_label(form.plainPassword.second) }}</label>
+                            {{ form_widget(form.plainPassword.second) }}
+                            {{ form_errors(form.plainPassword.second) }}
+                        </div>
+                    </div>
+                    {{ form_errors(form.plainPassword) }}
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Retour
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_benevole_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Retour
+                            </a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-lg me-1"></i>Enregistrer
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
