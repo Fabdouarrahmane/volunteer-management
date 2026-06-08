@@ -41,6 +41,9 @@ class EvenementRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    /**
+     * @return Evenement[]
+     */
     public function findUpcoming(): array
     {
         return $this->createQueryBuilder('e')

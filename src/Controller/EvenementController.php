@@ -35,7 +35,9 @@ class EvenementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $evenement->setAdministrateur($this->getUser());
+            $admin = $this->getUser();
+            assert($admin instanceof \App\Entity\Administrateur);
+            $evenement->setAdministrateur($admin);
             $em->persist($evenement);
             $em->flush();
 
