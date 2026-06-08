@@ -40,4 +40,16 @@ class MessageRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @return Message[]
+     */
+    public function findLatest(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.dateEnvoi', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
