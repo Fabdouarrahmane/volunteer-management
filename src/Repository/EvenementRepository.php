@@ -41,10 +41,22 @@ class EvenementRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function countUpcoming(): int
+    {
+        return (int) $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->where('e.dateEvenement >= :now')
+            ->andWhere('e.statutEvenement != :annule')
+            ->setParameter('now', new \DateTime())
+            ->setParameter('annule', 'annule')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     /**
      * @return Evenement[]
      */
-    public function findUpcoming(): array
+    public function findUpcoming(int $limit = 10): array
     {
         return $this->createQueryBuilder('e')
             ->where('e.dateEvenement >= :now')
@@ -52,6 +64,7 @@ class EvenementRepository extends ServiceEntityRepository
             ->setParameter('now', new \DateTime())
             ->setParameter('annule', 'annule')
             ->orderBy('e.dateEvenement', 'ASC')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

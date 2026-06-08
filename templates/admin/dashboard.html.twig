@@ -1,25 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord — Administrateur{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
 
 {% block body %}
-    <h1>Tableau de bord</h1>
-    <p class="text-muted">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Tableau de bord</h1>
+        <p class="text-muted mb-0">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</p>
+    </div>
 
-    <div class="row mt-4">
+    {# Indicateurs #}
+    <div class="row mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Bénévoles</h5>
-                    <a href="{{ path('app_admin_benevole_index') }}" class="btn btn-light btn-sm mt-2">Gérer</a>
+                    <p class="card-text display-6">{{ nbBenevoles }}</p>
+                    <a href="{{ path('app_admin_benevole_index') }}" class="btn btn-light btn-sm">Gérer</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Événements</h5>
-                    <a href="{{ path('app_evenement_index') }}" class="btn btn-light btn-sm mt-2">Gérer</a>
+                    <h5 class="card-title">Événements à venir</h5>
+                    <p class="card-text display-6">{{ nbEvenementsAVenir }}</p>
+                    <a href="{{ path('app_evenement_index') }}" class="btn btn-light btn-sm">Gérer</a>
                 </div>
             </div>
         </div>
@@ -27,7 +32,8 @@
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Affectations</h5>
-                    <a href="{{ path('app_affectation_index') }}" class="btn btn-light btn-sm mt-2">Gérer</a>
+                    <p class="card-text display-6">{{ nbAffectations }}</p>
+                    <a href="{{ path('app_affectation_index') }}" class="btn btn-light btn-sm">Gérer</a>
                 </div>
             </div>
         </div>
@@ -35,7 +41,66 @@
             <div class="card text-white bg-info mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Messages</h5>
-                    <p class="card-text display-6">—</p>
+                    <p class="card-text display-6">{{ derniersMessages|length }}</p>
+                    <a href="{{ path('app_admin_messagerie_index') }}" class="btn btn-light btn-sm">Gérer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {# Prochains événements #}
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Prochains événements</h5>
+                    <a href="{{ path('app_evenement_index') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if prochainEvenements is empty %}
+                        <p class="p-3 text-muted">Aucun événement à venir.</p>
+                    {% else %}
+                        <ul class="list-group list-group-flush">
+                            {% for evt in prochainEvenements %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ evt.titre }}</strong>
+                                        <small class="d-block text-muted">{{ evt.dateEvenement|date('d/m/Y à H:i') }}</small>
+                                    </div>
+                                    <a href="{{ path('app_evenement_show', {id: evt.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Derniers messages #}
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Derniers messages</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if derniersMessages is empty %}
+                        <p class="p-3 text-muted">Aucun message.</p>
+                    {% else %}
+                        <ul class="list-group list-group-flush">
+                            {% for msg in derniersMessages %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ msg.sujet }}</strong>
+                                        <small class="text-muted">{{ msg.dateEnvoi|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <small class="text-muted">
+                                        De {{ msg.expediteur.prenom }} {{ msg.expediteur.nom }}
+                                        → {{ msg.destinataire.prenom }} {{ msg.destinataire.nom }}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
