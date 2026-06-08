@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Événements à venir{% endblock %}
+
+{% block body %}
+    <h1>Événements à venir</h1>
+
+    {% if evenements is empty %}
+        <div class="alert alert-info mt-3">Aucun événement à venir pour le moment.</div>
+    {% else %}
+        <div class="row mt-3">
+            {% for evenement in evenements %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ evenement.titre }}</h5>
+                            <p class="text-muted mb-1">
+                                📅 {{ evenement.dateEvenement|date('d/m/Y à H:i') }}
+                            </p>
+                            <p class="text-muted mb-2">
+                                📍 {{ evenement.lieu ?? '—' }}
+                            </p>
+                            <p class="card-text">{{ evenement.description|slice(0, 100) }}{% if evenement.description|length > 100 %}…{% endif %}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ path('app_benevole_evenement_show', {id: evenement.id}) }}" class="btn btn-sm btn-outline-primary">
+                                Voir le détail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

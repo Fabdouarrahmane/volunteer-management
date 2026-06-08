@@ -1,0 +1,38 @@
+{{ form_start(form) }}
+<div class="mb-3">
+    {{ form_label(form.titre) }}
+    {{ form_widget(form.titre) }}
+    {{ form_errors(form.titre) }}
+</div>
+<div class="mb-3">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.dateEvenement) }}
+        {{ form_widget(form.dateEvenement) }}
+        {{ form_errors(form.dateEvenement) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.lieu) }}
+        {{ form_widget(form.lieu) }}
+        {{ form_errors(form.lieu) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.nbBenevoles) }}
+        {{ form_widget(form.nbBenevoles) }}
+        {{ form_errors(form.nbBenevoles) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.statutEvenement) }}
+        {{ form_widget(form.statutEvenement) }}
+        {{ form_errors(form.statutEvenement) }}
+    </div>
+</div>
+<button type="submit" class="btn btn-primary">{{ button_label ?? 'Enregistrer' }}</button>
+<a href="{{ path('app_evenement_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+{{ form_end(form) }}
