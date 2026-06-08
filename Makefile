@@ -1,4 +1,4 @@
-.PHONY: help build up down restart shell sf cc logs db
+.PHONY: help build up down restart php sf cc logs db
 
 # Couleurs
 GREEN  := \033[0;32m
@@ -20,7 +20,7 @@ down: ## Arrête les conteneurs
 restart: ## Redémarre les conteneurs
 	docker compose restart
 
-shell: ## Ouvre un shell dans le conteneur PHP
+php: ## Ouvre un shell dans le conteneur PHP
 	docker compose exec php bash
 
 sf: ## Exécute une commande Symfony  → make sf c="cache:clear"
