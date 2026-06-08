@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Messagerie</h1>
+        <a href="{{ path('app_message_new') }}" class="btn btn-primary">+ Nouveau message</a>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="messageTabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#recus">
+                Reçus
+                {% if messagesRecus|length > 0 %}
+                    <span class="badge bg-primary">{{ messagesRecus|length }}</span>
+                {% endif %}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#envoyes">
+                Envoyés
+                {% if messagesEnvoyes|length > 0 %}
+                    <span class="badge bg-secondary">{{ messagesEnvoyes|length }}</span>
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="recus">
+            {% if messagesRecus is empty %}
+                <div class="alert alert-info">Aucun message reçu.</div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>De</th>
+                            <th>Sujet</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for msg in messagesRecus %}
+                            <tr>
+                                <td>{{ msg.expediteur.prenom }} {{ msg.expediteur.nom }}</td>
+                                <td>{{ msg.sujet }}</td>
+                                <td>{{ msg.dateEnvoi|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <a href="{{ path('app_message_show', {id: msg.id}) }}" class="btn btn-sm btn-outline-info">Lire</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="tab-pane fade" id="envoyes">
+            {% if messagesEnvoyes is empty %}
+                <div class="alert alert-info">Aucun message envoyé.</div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>À</th>
+                            <th>Sujet</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for msg in messagesEnvoyes %}
+                            <tr>
+                                <td>{{ msg.destinataire.prenom }} {{ msg.destinataire.nom }}</td>
+                                <td>{{ msg.sujet }}</td>
+                                <td>{{ msg.dateEnvoi|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <a href="{{ path('app_message_show', {id: msg.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                                    <form method="post" action="{{ path('app_message_delete', {id: msg.id}) }}" class="d-inline"
+                                          onsubmit="return confirm('Supprimer ce message ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_message_' ~ msg.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

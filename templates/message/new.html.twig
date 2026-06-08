@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau message{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Nouveau message</h1>
+        <a href="{{ path('app_message_index') }}" class="btn btn-outline-secondary">← Retour</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.destinataire) }}
+                {{ form_widget(form.destinataire) }}
+                {{ form_errors(form.destinataire) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.sujet) }}
+                {{ form_widget(form.sujet) }}
+                {{ form_errors(form.sujet) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.contenu) }}
+                {{ form_widget(form.contenu) }}
+                {{ form_errors(form.contenu) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <a href="{{ path('app_message_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
