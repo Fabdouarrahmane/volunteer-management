@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'affectation{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Modifier l'affectation</h1>
+        <a href="{{ path('app_affectation_index') }}" class="btn btn-outline-secondary">← Retour</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('affectation/_form.html.twig', { button_label: 'Enregistrer' }) }}
+        </div>
+    </div>
+{% endblock %}

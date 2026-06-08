@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectations{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Affectations</h1>
+        <a href="{{ path('app_affectation_new') }}" class="btn btn-primary">+ Nouvelle affectation</a>
+    </div>
+
+    {% if affectations is empty %}
+        <div class="alert alert-info">Aucune affectation enregistrée.</div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>Bénévole</th>
+                    <th>Événement</th>
+                    <th>Rôle</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for affectation in affectations %}
+                    {% set statut_colors = {
+                        'confirmee': 'success',
+                        'en_attente': 'warning',
+                        'annulee': 'danger'
+                    } %}
+                    <tr>
+                        <td>{{ affectation.benevole.prenom }} {{ affectation.benevole.nom }}</td>
+                        <td>{{ affectation.evenement.titre }}</td>
+                        <td>{{ affectation.roleMission }}</td>
+                        <td>{{ affectation.dateAffectation|date('d/m/Y') }}</td>
+                        <td>
+                        <span class="badge bg-{{ statut_colors[affectation.statutAffectation] ?? 'secondary' }}">
+                            {{ affectation.statutAffectation }}
+                        </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_affectation_show', {id: affectation.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                            <a href="{{ path('app_affectation_edit', {id: affectation.id}) }}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                            <form method="post" action="{{ path('app_affectation_delete', {id: affectation.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Supprimer cette affectation ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_affectation_' ~ affectation.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
