@@ -1,0 +1,45 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom) }}
+        {{ form_errors(form.nom) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.prenom) }}
+        {{ form_widget(form.prenom) }}
+        {{ form_errors(form.prenom) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+        {{ form_errors(form.email) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.telephone) }}
+        {{ form_widget(form.telephone) }}
+        {{ form_errors(form.telephone) }}
+    </div>
+</div>
+<div class="mb-3">
+    {{ form_label(form.competences) }}
+    {{ form_widget(form.competences) }}
+    {{ form_errors(form.competences) }}
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.plainPassword.first) }}
+        {{ form_widget(form.plainPassword.first) }}
+        {{ form_errors(form.plainPassword.first) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.plainPassword.second) }}
+        {{ form_widget(form.plainPassword.second) }}
+        {{ form_errors(form.plainPassword.second) }}
+    </div>
+</div>
+<button type="submit" class="btn btn-primary">{{ button_label ?? 'Enregistrer' }}</button>
+<a href="{{ path('app_admin_benevole_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+{{ form_end(form) }}
