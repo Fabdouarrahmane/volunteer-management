@@ -3,45 +3,120 @@
 {% block title %}Mon espace bénévole{% endblock %}
 
 {% block body %}
-    <h1>Mon espace</h1>
-    <p class="text-muted">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</p>
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <h1 class="mb-0">Mon espace</h1>
+        <span class="text-muted">Bienvenue, {{ app.user.prenom }} {{ app.user.nom }}</span>
+    </div>
 
-    <div class="row mt-4">
+    {# ── Cartes de navigation ─────────────────────────────────── #}
+    <div class="row mt-4 mb-4">
         <div class="col-md-3">
-            <div class="card mb-3">
+            <div class="card mb-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">🗓️ Événements</h5>
-                    <p class="card-text text-muted">Consultez les événements à venir.</p>
+                    <h5 class="card-title"><i class="bi bi-calendar-event me-2 text-primary"></i>Événements</h5>
+                    <p class="card-text text-muted small">Consultez les événements à venir.</p>
                     <a href="{{ path('app_benevole_evenement_index') }}" class="btn btn-outline-primary btn-sm">Voir</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mb-3">
+            <div class="card mb-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">📅 Mes disponibilités</h5>
-                    <p class="card-text text-muted">Gérez vos plages horaires disponibles.</p>
-                    <a href="{{ path('app_disponibilite_index') }}" class="btn btn-outline-primary btn-sm">Voir</a>
+                    <h5 class="card-title"><i class="bi bi-clock me-2 text-secondary"></i>Mes disponibilités</h5>
+                    <p class="card-text text-muted small">Gérez vos plages horaires disponibles.</p>
+                    <a href="{{ path('app_disponibilite_index') }}" class="btn btn-outline-secondary btn-sm">Voir</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mb-3">
+            <div class="card mb-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">✅ Mes affectations</h5>
-                    <p class="card-text text-muted">Consultez vos missions assignées.</p>
+                    <h5 class="card-title"><i class="bi bi-person-check me-2 text-success"></i>Mes affectations</h5>
+                    <p class="card-text text-muted small">Consultez vos missions assignées.</p>
                     <a href="{{ path('app_benevole_affectation_index') }}" class="btn btn-outline-success btn-sm">Voir</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mb-3">
+            <div class="card mb-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">✉️ Messagerie</h5>
-                    <p class="card-text text-muted">Consultez vos messages.</p>
+                    <h5 class="card-title"><i class="bi bi-envelope me-2 text-info"></i>Messagerie</h5>
+                    <p class="card-text text-muted small">Consultez vos messages.</p>
                     <a href="{{ path('app_message_index') }}" class="btn btn-outline-info btn-sm">Voir</a>
                 </div>
             </div>
         </div>
+    </div>
+
+    {# ── Panneaux d'aperçu ───────────────────────────────────── #}
+    <div class="row">
+
+        {# Prochaines affectations #}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold"><i class="bi bi-person-check me-2"></i>Mes prochaines affectations</span>
+                    <a href="{{ path('app_benevole_affectation_index') }}" class="btn btn-outline-secondary btn-sm">Voir tout</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if prochaines_affectations is empty %}
+                        <p class="text-muted p-3 mb-0">Aucune affectation à venir.</p>
+                    {% else %}
+                        <ul class="list-group list-group-flush">
+                            {% for affectation in prochaines_affectations %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-medium">{{ affectation.evenement.titre }}</div>
+                                        <small class="text-muted">
+                                            {{ affectation.evenement.dateEvenement|date('d/m/Y à H:i') }}
+                                            {% if affectation.roleMission %}
+                                                — {{ affectation.roleMission }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    {% if affectation.statutAffectation == 'confirme' %}
+                                        <span class="badge bg-success">Confirmé</span>
+                                    {% elseif affectation.statutAffectation == 'en_attente' %}
+                                        <span class="badge bg-warning text-dark">En attente</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ affectation.statutAffectation }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Derniers messages reçus #}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold"><i class="bi bi-envelope me-2"></i>Mes derniers messages</span>
+                    <a href="{{ path('app_message_index') }}" class="btn btn-outline-secondary btn-sm">Voir tout</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if derniers_messages is empty %}
+                        <p class="text-muted p-3 mb-0">Aucun message reçu.</p>
+                    {% else %}
+                        <ul class="list-group list-group-flush">
+                            {% for message in derniers_messages %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-medium">{{ message.sujet }}</span>
+                                        <small class="text-muted">{{ message.dateEnvoi|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <small class="text-muted">
+                                        De {{ message.expediteur.prenom }} {{ message.expediteur.nom }}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
