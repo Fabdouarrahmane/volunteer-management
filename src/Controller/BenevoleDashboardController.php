@@ -25,7 +25,7 @@ final class BenevoleDashboardController extends AbstractController
 
         return $this->render('benevole/dashboard.html.twig', [
             'prochaines_affectations' => $affectationRepo->findUpcomingForBenevole($benevole, 5),
-            'derniers_messages'       => $messageRepo->findLatestForBenevole($benevole, 5),
+            'derniers_messages' => $messageRepo->findLatestForBenevole($benevole, 5),
         ]);
     }
 

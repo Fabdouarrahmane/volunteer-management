@@ -67,5 +67,4 @@ class AffectationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-
 }
