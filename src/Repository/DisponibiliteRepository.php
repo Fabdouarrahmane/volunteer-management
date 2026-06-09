@@ -40,4 +40,18 @@ class DisponibiliteRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @return Disponibilite[]
+     */
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.benevole', 'b')
+            ->addSelect('b')
+            ->orderBy('d.dateDisponibilite', 'ASC')
+            ->addOrderBy('b.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

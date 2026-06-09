@@ -69,6 +69,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_admin_disponibilite' %}active{% endif %}"
+                               href="{{ path('app_admin_disponibilite_index') }}">
+                                <i class="bi bi-clock me-1"></i>Disponibilités
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_admin_messagerie' %}active{% endif %}"
                                href="{{ path('app_admin_messagerie_index') }}">
                                 <i class="bi bi-envelope me-1"></i>Messagerie

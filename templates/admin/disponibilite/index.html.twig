@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Disponibilités des bénévoles{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h1 class="mb-0">Disponibilités des bénévoles</h1>
+        <span class="badge bg-secondary fs-6">{{ disponibilites|length }} entrée(s)</span>
+    </div>
+
+    {% if disponibilites is empty %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>Aucune disponibilité n'a encore été saisie par les bénévoles.
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Bénévole</th>
+                            <th>Date</th>
+                            <th>Heure de début</th>
+                            <th>Heure de fin</th>
+                            <th>Statut</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dispo in disponibilites %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('app_admin_benevole_show', {id: dispo.benevole.id}) }}"
+                                       class="text-decoration-none fw-medium">
+                                        {{ dispo.benevole.prenom }} {{ dispo.benevole.nom }}
+                                    </a>
+                                </td>
+                                <td>{{ dispo.dateDisponibilite|date('d/m/Y') }}</td>
+                                <td>{{ dispo.heureDebut|date('H:i') }}</td>
+                                <td>{{ dispo.heureFin|date('H:i') }}</td>
+                                <td>
+                                    {% if dispo.statutDisponibilite == 'disponible' %}
+                                        <span class="badge bg-success">Disponible</span>
+                                    {% elseif dispo.statutDisponibilite == 'indisponible' %}
+                                        <span class="badge bg-danger">Indisponible</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ dispo.statutDisponibilite }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
