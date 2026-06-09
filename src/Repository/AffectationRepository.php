@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Affectation;
+use App\Entity\Benevole;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,30 @@ class AffectationRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @return Affectation[]
+     */
+    public function findUpcomingForBenevole(Benevole $benevole, int $limit = 5): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.evenement', 'e')
+            ->addSelect('e')
+            ->where('a.benevole = :benevole')
+            ->andWhere('e.dateEvenement >= :now')
+            ->setParameter('benevole', $benevole)
+            ->setParameter('now', new \DateTime())
+            ->orderBy('e.dateEvenement', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

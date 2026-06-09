@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Benevole;
 use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -44,6 +45,20 @@ class MessageRepository extends ServiceEntityRepository
     /**
      * @return Message[]
      */
+    public function findLatestForBenevole(Benevole $benevole, int $limit = 5): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.destinataire = :benevole')
+            ->setParameter('benevole', $benevole)
+            ->orderBy('m.dateEnvoi', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Message[]
+     */
     public function findLatest(int $limit = 5): array
     {
         return $this->createQueryBuilder('m')
@@ -51,5 +66,13 @@ class MessageRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
