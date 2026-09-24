@@ -1,6 +1,6 @@
 # 🤝 Plateforme de gestion des bénévoles
 
-Projet de fin d'études **Master 2** — ENSITECH 2025-2026
+Projet de fin d'études **Master 2** — ENSITECH
 
 Application web de gestion des bénévoles pour une association locale, permettant de coordonner les événements, les disponibilités, les affectations et la communication interne.
 
